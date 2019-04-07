@@ -38,6 +38,8 @@ THE SOFTWARE.
 
 #include "ArduboyTones.h"
 
+#if !defined(__SAMD51__)
+
 // pointer to a function that indicates if sound is enabled
 static bool (*outputEnabled)();
 
@@ -285,3 +287,4 @@ ISR(TIMER3_COMPA_vect)
     ArduboyTones::nextTone();
   }
 }
+#endif
