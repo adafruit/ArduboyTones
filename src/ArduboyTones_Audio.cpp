@@ -9,9 +9,10 @@
 
 #include "ArduboyTones.h"
 #include <Audio.h>
-#include "Adafruit_ZeroTimer.h"
-extern AudioSynthWaveformSine   sine1, sine2;
+#include "Adafruit_Arcada.h"
 
+extern AudioSynthWaveformSine   sine1, sine2;
+extern Adafruit_Arcada arcada;
 
 // pointer to a function that indicates if sound is enabled
 static bool (*outputEnabled)();
@@ -31,16 +32,9 @@ static volatile uint16_t toneSequence[MAX_TONES * 2 + 1];
 static volatile bool inProgmem;
 
 
-Adafruit_ZeroTimer zt5 = Adafruit_ZeroTimer(5);
-#define CALLBACK_FREQ    1000  // 1ms
-#define SPEAKER_ENABLE  51
-
-void TC5_Handler(){
-  Adafruit_ZeroTimer::timerHandler(5);
-}
 volatile int32_t duration = 0;
 volatile int32_t second = 0;
-void Timer5Callback()
+void TimerCallback()
 {
   /*
   if (second == 0) {
@@ -68,16 +62,8 @@ ArduboyTones::ArduboyTones(boolean (*outEn)())
 static boolean initialized = false;
 void ArduboyTones::begin(void) {
   AudioMemory(2);
-  digitalWrite(SPEAKER_ENABLE, HIGH);
-
-  zt5.configure(TC_CLOCK_PRESCALER_DIV1, // prescaler
-                TC_COUNTER_SIZE_16BIT,   // bit width of timer/counter
-                TC_WAVE_GENERATION_MATCH_PWM // frequency or PWM mode
-                );
-
-  zt5.setCompare(0, 48000000/CALLBACK_FREQ);
-  zt5.setCallback(true, TC_CALLBACK_CC_CHANNEL0, Timer5Callback);  // this one sets pin low
-  zt5.enable(true);
+  arcada.timerCallback(1000, TimerCallback);
+  arcada.enableSpeaker(true);
   initialized = true;
 }
 
