@@ -1,4 +1,6 @@
-# The ArduboyTones Library
+# The ArduboyTones Library for Arcada
+
+**This is a port of ArduboyTones for Arcada boards such as PyBadge and PyGamer**
 
 The ArduboyTones library is maintained in a git repository hosted on [GitHub](https://github.com/) at:
 
